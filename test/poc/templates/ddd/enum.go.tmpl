@@ -1,0 +1,27 @@
+// File: {{ .FileName }}
+// Package {{ .PackageName }} contains enum definitions.
+
+package {{ .PackageName }}
+
+{{ range .Enums }}
+// {{ .Name }} represents {{ .Description }}
+type {{ .Name }} string
+
+const (
+	{{- range .Fields }}
+	{{ .Name }} {{ $.Name }} = "{{ .Value }}"
+	{{- end }}
+)
+
+// IsValid{{ .Name }} checks if a given value is a valid {{ .Name }}.
+func IsValid{{ .Name }}(value {{ .Name }}) bool {
+	switch value {
+	{{- range .Fields }}
+	case {{ .Name }}:
+		return true
+	{{- end }}
+	}
+	return false
+}
+
+{{ end }}
