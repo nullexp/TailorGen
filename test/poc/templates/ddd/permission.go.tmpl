@@ -1,0 +1,13 @@
+const (
+	PermissionCreate{{ .EntityName }} = "PermissionCreate{{ .EntityName }}"
+	PermissionUpdate{{ .EntityName }} = "PermissionUpdate{{ .EntityName }}"
+	PermissionDelete{{ .EntityName }} = "PermissionDelete{{ .EntityName }}"
+	PermissionGet{{ .EntityName }}    = "PermissionGet{{ .EntityName }}"
+)
+
+var {{ .EntityName }}Permissions = []string{
+	PermissionCreate{{ .EntityName }},
+	PermissionUpdate{{ .EntityName }},
+	PermissionDelete{{ .EntityName }},
+	PermissionGet{{ .EntityName }},
+}

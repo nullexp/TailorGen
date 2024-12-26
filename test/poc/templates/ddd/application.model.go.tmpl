@@ -1,0 +1,68 @@
+type Create{{ .EntityName }}Request struct {
+	{{- range .Fields }}
+	{{ .Name }} {{ .Type }} `validate:"{{ .ValidationTag }}"`
+	{{- end }}
+}
+
+func (dto Create{{ .EntityName }}Request) Validate(ctx context.Context) error {
+	return infraError.Validate(ctx, dto)
+}
+
+type Create{{ .EntityName }}Response struct {
+	Id string `json:"id"`
+}
+
+type Update{{ .EntityName }}Request struct {
+	Id string `json:"id" validate:"required,uuid"`
+	{{- range .Fields }}
+	{{ .Name }} {{ .Type }} `json:"{{ .JsonTag }}" validate:"{{ .ValidationTag }}"`
+	{{- end }}
+}
+
+func (dto Update{{ .EntityName }}Request) Validate(ctx context.Context) error {
+	return infraError.Validate(ctx, dto)
+}
+
+type Get{{ .EntityName }}ByIdRequest struct {
+	Id string `json:"id"`
+}
+
+func (dto Get{{ .EntityName }}ByIdRequest) Validate(ctx context.Context) error {
+	return infraError.Validate(ctx, dto)
+}
+
+type {{ .EntityName }} struct {
+	Id        string    `json:"id"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
+	{{- range .Fields }}
+	{{ .Name }} {{ .Type }} `json:"{{ .JsonTag }}"`
+	{{- end }}
+}
+
+type Get{{ .EntityName }}ByIdResponse struct {
+	{{ .EntityName }} {{ .EntityName }} `json:"{{ snake_case .EntityName }}"`
+}
+
+type List{{ .EntityName }}Request struct {
+	Page  misc.Pagination
+	Sort  []misc.Sort
+	Query misc.QueryInfo
+}
+
+func (dto List{{ .EntityName }}Request) Validate(ctx context.Context) error {
+	return infraError.Validate(ctx, dto)
+}
+
+type List{{ .EntityName }}Response struct {
+	{{ .EntityName }}s []{{ .EntityName }} `json:"data"`
+	Total       int64          `json:"total"`
+}
+
+type Delete{{ .EntityName }}Request struct {
+	Id string `json:"id"`
+}
+
+func (dto Delete{{ .EntityName }}Request) Validate(ctx context.Context) error {
+	return infraError.Validate(ctx, dto)
+}

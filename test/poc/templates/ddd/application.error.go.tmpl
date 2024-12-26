@@ -1,0 +1,50 @@
+{{- range .Fields }}
+// Error definitions for {{ .Name }} field in {{ $.EntityName }}
+{{ $.EntityName }}{{ title_case .Name }}UniqueKey   eprotocol.ErrorCode = "{{ snake_case $.EntityName }}.{{ snake_case .Name }}_UNIQUE"
+{{ $.EntityName }}{{ title_case .Name }}UniqueDesc  string              = "The value provided for {{ .Name }} must be unique."
+Err{{ $.EntityName }}{{ title_case .Name }}Unique   = eprotocol.NewUserOperationError({{ $.EntityName }}{{ title_case .Name }}UniqueKey, {{ $.EntityName }}{{ title_case .Name }}UniqueDesc)
+
+{{- if .IsRequired }}
+{{ $.EntityName }}{{ title_case .Name }}RequiredKey  eprotocol.ErrorCode = "{{ snake_case $.EntityName }}.{{ snake_case .Name }}_REQUIRED"
+{{ $.EntityName }}{{ title_case .Name }}RequiredDesc string              = "The field {{ .Name }} is required."
+Err{{ $.EntityName }}{{ title_case .Name }}Required  = eprotocol.NewUserOperationError({{ $.EntityName }}{{ title_case .Name }}RequiredKey, {{ $.EntityName }}{{ title_case .Name }}RequiredDesc)
+{{- end }}
+
+{{- if .ForeignKey }}
+{{ $.EntityName }}{{ title_case .Name }}ForeignKeyKey  eprotocol.ErrorCode = "{{ snake_case $.EntityName }}.{{ snake_case .Name }}_INVALID_REFERENCE"
+{{ $.EntityName }}{{ title_case .Name }}ForeignKeyDesc string              = "The value provided for {{ .Name }} does not match an existing reference."
+Err{{ $.EntityName }}{{ title_case .Name }}ForeignKey  = eprotocol.NewUserOperationError({{ $.EntityName }}{{ title_case .Name }}ForeignKeyKey, {{ $.EntityName }}{{ title_case .Name }}ForeignKeyDesc)
+{{- end }}
+
+{{- if .ValidationTag }}
+{{ $.EntityName }}{{ title_case .Name }}ValidationKey  eprotocol.ErrorCode = "{{ snake_case $.EntityName }}.{{ snake_case .Name }}_VALIDATION_FAILED"
+{{ $.EntityName }}{{ title_case .Name }}ValidationDesc string              = "Validation failed for the field {{ .Name }}. {{ .ValidationTag }}"
+Err{{ $.EntityName }}{{ title_case .Name }}Validation  = eprotocol.NewUserOperationError({{ $.EntityName }}{{ title_case .Name }}ValidationKey, {{ $.EntityName }}{{ title_case .Name }}ValidationDesc)
+{{- end }}
+{{- end }}
+
+// Not Found error for {{ $.EntityName }}
+{{ $.EntityName }}NotFoundKey  eprotocol.ErrorCode = "{{ snake_case $.EntityName }}.NOT_FOUND"
+{{ $.EntityName }}NotFoundDesc string              = "The {{ $.EntityName }} you are looking for does not exist."
+Err{{ $.EntityName }}NotFound  = eprotocol.NewNotFoundError({{ $.EntityName }}NotFoundKey, {{ $.EntityName }}NotFoundDesc)
+
+// Get{{ .EntityName }}Errors returns all defined errors for {{ .EntityName }}
+func Get{{ .EntityName }}Errors() []error {
+	return []error{
+		{{- range .Fields }}
+		{{- if .IsUnique }}
+		Err{{ $.EntityName }}{{ title_case .Name }}Unique,
+		{{- end }}
+		{{- if .IsRequired }}
+		Err{{ $.EntityName }}{{ title_case .Name }}Required,
+		{{- end }}
+		{{- if .ForeignKey }}
+		Err{{ $.EntityName }}{{ title_case .Name }}ForeignKey,
+		{{- end }}
+		{{- if .ValidationTag }}
+		Err{{ $.EntityName }}{{ title_case .Name }}Validation,
+		{{- end }}
+		{{- end }}
+		Err{{ $.EntityName }}NotFound,
+	}
+}

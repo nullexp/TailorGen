@@ -1,0 +1,12 @@
+{{- range .Fields }}
+{{- if .IsUnique }}
+var Get{{ $.EntityName }}By{{ title_case .Name }}SpecificationNotId = func({{ snake_case .Name }} string, id string) specification.Specification {
+	{{ snake_case .Name }}Spec := specification.NewQuerySpecification(entity.Field{{ title_case .Name }}, misc.QueryOperatorEqual, misc.NewOperand({{ snake_case .Name }}))
+	idSpec := specification.NewQuerySpecification(entity.FieldId, misc.QueryOperatorNotEqual, misc.NewOperand(id))
+	return {{ snake_case .Name }}Spec.And(idSpec)
+}
+{{- end }}
+var Get{{ $.EntityName }}By{{ title_case .Name }}Specification = func({{ snake_case .Name }} {{ .Type }}) specification.Specification {
+	return specification.NewQuerySpecification(entity.Field{{ title_case .Name }}, misc.QueryOperatorEqual, misc.NewOperand({{ snake_case .Name }}))
+}
+{{- end }}

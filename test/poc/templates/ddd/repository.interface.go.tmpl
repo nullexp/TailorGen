@@ -1,0 +1,50 @@
+
+// {{ .EntityName }} interface defines repository operations for the entity
+type {{ .EntityName }} interface {
+	// Retrieve multiple {{ .EntityName }}s based on query, pagination, and sorting
+	Get(ctx context.Context, query specification.Specification, page misc.Pagination, sort []misc.Sort) (out []entity.{{ .EntityName }}, err error)
+
+	// Insert a new {{ .EntityName }} into the repository
+	Insert(ctx context.Context, model *entity.{{ .EntityName }}) (err error)
+
+	// Retrieve a {{ .EntityName }} by ID
+	GetById(ctx context.Context, id string) (out entity.{{ .EntityName }}, err error)
+
+	// Check if a {{ .EntityName }} exists based on the query
+	Exist(ctx context.Context, query specification.Specification) (exist bool, err error)
+
+	// Calculate the sum of a column based on the query
+	Sum(ctx context.Context, column string, query specification.Specification) (sum float64, err error)
+
+	// Calculate the average of a column based on the query
+	Average(ctx context.Context, column string, query specification.Specification) (average float64, err error)
+
+	// Count the number of {{ .EntityName }}s based on the query
+	Count(ctx context.Context, query specification.Specification) (count int64, err error)
+
+	// Update a {{ .EntityName }}
+	Update(ctx context.Context, model *entity.{{ .EntityName }}) (err error)
+
+	// Delete a {{ .EntityName }} by ID
+	Delete(ctx context.Context, id string) (err error)
+
+	// Delete {{ .EntityName }}s based on a specification query
+	DeleteBySpecification(ctx context.Context, query specification.Specification) (err error)
+
+	// Retrieve a single {{ .EntityName }} based on a query
+	GetSingle(ctx context.Context, query specification.Specification) (out entity.{{ .EntityName }}, err error)
+
+	// Count distinct {{ .EntityName }}s based on a column and query
+	DistinctCount(ctx context.Context, column string, query specification.Specification) (distinctCount int64, err error)
+
+	// Sum distinct values of a column based on a query
+	DistinctSum(ctx context.Context, column string, query specification.Specification) (distinctSum float64, err error)
+
+	// Update a specific field in the repository based on a query
+	UpdateField(ctx context.Context, fieldName string, fieldValue any, query specification.Specification) (err error)
+}
+
+// {{ .EntityName }}RepoFactory interface defines the factory for creating {{ .EntityName }} repository instances
+type {{ .EntityName }}RepoFactory interface {
+	New{{ .EntityName }}(protocol.DataContextGetter) {{ .EntityName }}
+}

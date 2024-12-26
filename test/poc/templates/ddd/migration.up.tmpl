@@ -1,0 +1,10 @@
+CREATE TABLE {{ snake_case .EntityName }} (
+    id UUID PRIMARY KEY,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
+    {{- range .Fields }}
+    {{ snake_case .Name }} {{ db_type . }} {{ field_constraints . }},
+    {{- end }}
+    {{ foreign_keys .Fields }}
+    CONSTRAINT {{ snake_case .EntityName }}_unique UNIQUE (id)
+);

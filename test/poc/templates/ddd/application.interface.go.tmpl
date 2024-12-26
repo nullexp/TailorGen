@@ -1,0 +1,16 @@
+type {{ .EntityName }}Service interface {
+	// Create a new {{ .EntityName }}
+	Create(context.Context, model.Create{{ .EntityName }}Request) (model.Create{{ .EntityName }}Response, error)
+
+	// Update an existing {{ .EntityName }}
+	Update(context.Context, model.Update{{ .EntityName }}Request) error
+
+	// Retrieve a {{ .EntityName }} by ID
+	GetById(context.Context, model.Get{{ .EntityName }}ByIdRequest) (model.Get{{ .EntityName }}ByIdResponse, error)
+
+	// List {{ .EntityName }}s with pagination
+	List(context.Context, model.List{{ .EntityName }}Request) (misc.ListWithTotal[model.{{ .EntityName }}], error)
+
+	// Delete a {{ .EntityName }}
+	Delete(context.Context, model.Delete{{ .EntityName }}Request) error
+}
